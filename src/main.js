@@ -8,15 +8,7 @@ const initProgressBlockControls = () => {
   const animateElem = wrapperElem.querySelector("#checkbox-animate");
   const hideElem = wrapperElem.querySelector("#checkbox-hide");
 
-  const spinner = new ProgressBlock({
-    className: "loader",
-    color: {
-      spinner: "#A126C0",
-      spinnerBg: "#EFADFF",
-    },
-    strokeSize: 25,
-    speedRate: 3000,
-  });
+  const spinner = new ProgressBlock();
 
   progressElem.append(spinner.elem);
 

@@ -1,5 +1,8 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/Andrpre/",
+  base: "/progress-block/",
+  build: {
+    outDir: "dist",
+  },
 });
