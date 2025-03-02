@@ -18,6 +18,18 @@ const spinner = new ProgressBlock();
 document.body.append(spinner.elem);
 ```
 
+## Демонстрация
+
+Стандартный индикатор загрузки:
+
+![Демо стандартного лоадера](src/assets/demo-basic-settings.gif)
+
+Кастомный индикатор загрузки:
+
+![Демо катомного лоадера](src/assets/demo-custom-settings.gif)
+
+Вживую демонстрацию можно посмотреть [тут](https://andrpre.github.io/progress-block/).
+
 ## Конфигурация при создании
 
 При создании экземпляра **ProgressBlock** можно передать объект настроек. Каждое свойство объекта не обязательно и может быть переданно опционально:
@@ -78,5 +90,3 @@ spinner.state = "normal";   // Остановит анимацию
 ```javascript
 spinner.state = "hidden"; // Удалит элемент из DOM
 ```
-
-
