@@ -1,0 +1,144 @@
+@import "./assets/fonts/fonts";
+
+$font-primary: "GT Eesti Pro Display", "Roboto", sans-serif;
+$font-size: 20px;
+
+$color-black: #000;
+$color-white: #fff;
+$color-blue: #005dff;
+$color-bg: #dfe6f0;
+
+$size-input-width: 48px;
+$size-input-height: 30px;
+
+$border-radius-input: 35px;
+
+@mixin flex($fd: row, $jc: center, $ai: center, $gap: 0) {
+  display: flex;
+  flex-direction: $fd;
+  justify-content: $jc;
+  align-items: $ai;
+  gap: $gap;
+}
+
+@mixin focus-outline($color) {
+  outline: 3px solid $color;
+}
+
+@mixin remove-control {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-primary;
+  font-size: $font-size;
+}
+
+label {
+  @include flex($gap: 25px);
+  cursor: pointer;
+}
+
+input {
+  padding: 0;
+  font-size: $font-size;
+  font-family: $font-primary;
+  border: none;
+}
+
+.main {
+  @include flex();
+  height: 100vh;
+}
+
+.wrapper {
+  @include flex($gap: 97px);
+}
+
+.progress {
+  width: 135px;
+  height: 135px;
+  display: flex;
+}
+
+.controls {
+  @include flex($fd: column, $ai: flex-start, $gap: 16px);
+}
+
+.controls__number-input {
+  width: $size-input-width;
+  height: $size-input-height;
+  text-align: center;
+  outline: 2px solid $color-black;
+  border-radius: $border-radius-input;
+
+  &:focus-visible {
+    @include focus-outline($color-blue);
+  }
+
+  @include remove-control;
+}
+
+.controls__checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.controls__checkbox-custom-input {
+  display: inline-block;
+  position: relative;
+  width: $size-input-width;
+  height: $size-input-height;
+  background-color: $color-bg;
+  transition: background-color 0.4s;
+  border-radius: $border-radius-input;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: $color-white;
+    transition: transform 0.4s;
+    border-radius: 50%;
+  }
+}
+
+.controls__checkbox-input {
+  &:focus-visible + .controls__checkbox-custom-input {
+    @include focus-outline($color-blue);
+  }
+
+  &:checked {
+    &:focus-visible + .controls__checkbox-custom-input {
+      @include focus-outline($color-black);
+    }
+
+    + .controls__checkbox-custom-input {
+      background-color: $color-blue;
+
+      &:before {
+        transform: translateX(18px);
+      }
+    }
+  }
+}
+
+@media (width < 768px) {
+  .wrapper {
+    @include flex($fd: column, $gap: 107px);
+  }
+}

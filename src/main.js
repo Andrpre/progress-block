@@ -1,21 +1,37 @@
-import ProgressBlock from './ProgressBlock/ProgressBlock.js';
+// Пример возможных настроек для ProgressBlock (нужно передать объект в конструктор при инстанцировании):
+// const configSpinner = {
+//   className: "loader",
+//   color: {
+//     spinner: "#A126C0",
+//     spinnerBg: "#EFADFF",
+//   },
+//   strokeSize: 15,
+//   speedRate: 500,
+// };
 
-const spinner = new ProgressBlock();
-document.querySelector('.spinner').append(spinner.elem);
+import "./style.scss";
+import ProgressBlock from "./ProgressBlock/ProgressBlock.js";
 
+const initProgressBlockControls = () => {
+  const wrapperElem = document.querySelector(".wrapper");
+  const progressElem = wrapperElem.querySelector(".progress");
+  const valueElem = wrapperElem.querySelector("#input-value");
+  const animateElem = wrapperElem.querySelector("#checkbox-animate");
+  const hideElem = wrapperElem.querySelector("#checkbox-hide");
 
-// spinner.progress = 35;
+  const spinner = new ProgressBlock();
 
-// spinner.state = "animated";
-spinner.state = "normal";
+  progressElem.append(spinner.elem);
 
-// let timer = 0;
-// setInterval(() => {
-//   spinner.progress = timer;
-//   timer = timer + 10;
-// }, 100);
+  valueElem.addEventListener("input", () => {
+    spinner.progress = valueElem.value;
+  });
+  animateElem.addEventListener("change", () => {
+    spinner.state = animateElem.checked ? "animated" : "normal";
+  });
+  hideElem.addEventListener("change", (e) =>
+    e.target.checked ? (spinner.state = "hidden") : progressElem.append(spinner.elem)
+  );
+};
 
-const input = document.querySelector('.controls__value-input');
-input.addEventListener('input', () => {
-    spinner.progress = input.value;
-});
+document.addEventListener("DOMContentLoaded", initProgressBlockControls);

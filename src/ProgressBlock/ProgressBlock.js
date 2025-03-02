@@ -1,91 +1,114 @@
 export default class ProgressBlock {
-  elem = null;
   #animation = null;
+  #progress = 60;
+  #state = "normal";
 
-  constructor() {
+  constructor(config = {}) {
+    this.className = config.className || "progress-block";
+    this.color = config.color || {
+      spinner: "#005DFF",
+      spinnerBg: "#EEF3F6",
+    };
+    this.strokeSize = config.strokeSize ?? 8;
+    this.speedRate = config.speedRate ?? 1000;
+
     this.#render();
-    this.progress = 30;
-    this.state = "animated";
+    this.progress = this.#progress;
+    this.state = this.#state;
   }
 
-  set progress(percent) {
-    const circle = this.elem.querySelector(".progress-block-spinner");
-    const radius = circle.getAttribute("r");
-    const circumference = 2 * Math.PI * radius;
-
-    if (percent < 1) percent = 0;
-    if (percent > 100) percent = 100;
-
-    const offset = circumference - (percent / 100) * circumference;
-
-    circle.style.strokeDasharray = circumference;
-    circle.style.strokeDashoffset = offset;
+  set progress(value) {
+    this.#progress = Math.max(0, Math.min(100, value));
+    this.#updateProgress();
   }
 
-  set state(state) {
-    switch (state) {
-      case "animated":
-        if (!this.#animation) {
-          this.#animation = this.elem.animate(
-            [{ transform: "rotate(0deg)" }, { transform: "rotate(360deg)" }],
-            {
-              duration: 1000,
-              iterations: Infinity,
-              easing: "linear",
-            }
-          );
-        }
-        break;
-
-      case "normal":
-        if (this.#animation) {
-          this.#animation.cancel();
-          this.#animation = null;
-        }
-        break;
-
-      case "hidden":
-        if (this.elem.parentNode) {
-          this.elem.remove();
-        }
-        break;
-
-      default:
-        break;
+  set state(value) {
+    if (!["animated", "normal", "hidden"].includes(value)) {
+      throw new Error(`Invalid state: ${value}`);
     }
-    this.elem.dataset.state = state;
+
+    this.#state = value;
+
+    if (value === "animated") this.#startAnimation();
+    if (value === "normal") this.#stopAnimation();
+    if (value === "hidden") this.#removeElement();
+  }
+
+  get progress() {
+    return this.#progress;
+  }
+
+  get state() {
+    return this.#state;
   }
 
   #render() {
     const wrapper = document.createElement("div");
+    const radius = 50 - this.strokeSize / 2;
+
     wrapper.innerHTML = `
-      <svg class="progress-block" viewBox="0 0 100 100">
-        <circle class="progress-block-spinner-bg" cx="50" cy="50" r="46" stroke-width="8"></circle>
+      <svg class="${this.className}" viewBox="0 0 100 100">
+        <circle class="${this.className}-spinner-bg" cx="50" cy="50" r="${radius}" stroke-width="${this.strokeSize}"></circle>
         <circle
-          class="progress-block-spinner"
+          class="${this.className}-spinner"
           cx="50"
           cy="50"
-          r="46"
-          stroke-width="8"
+          r="${radius}"
+          stroke-width="${this.strokeSize}"
         ></circle>
       </svg>
       `;
 
     this.elem = wrapper.firstElementChild;
 
-    const bgProgress = this.elem.querySelector(".progress-block-spinner-bg");
+    const bgProgress = this.elem.querySelector(`.${this.className}-spinner-bg`);
     Object.assign(bgProgress.style, {
       fill: "none",
-      stroke: "#EEF3F6",
+      stroke: this.color.spinnerBg,
     });
 
-    const progress = this.elem.querySelector(".progress-block-spinner");
+    const progress = this.elem.querySelector(`.${this.className}-spinner`);
     Object.assign(progress.style, {
       fill: "none",
-      stroke: "#005DFF",
+      stroke: this.color.spinner,
       transition: "stroke-dashoffset 0.3s ease",
     });
 
     this.elem.style.transform = "rotate(-90deg)";
+  }
+
+  #updateProgress() {
+    if (!this.elem) return;
+
+    const circle = this.elem.querySelector(`.${this.className}-spinner`);
+    const radius = circle.getAttribute("r");
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (this.#progress / 100) * circumference;
+
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = offset;
+  }
+
+  #startAnimation() {
+    if (this.#animation || !this.elem) return;
+
+    this.#animation = this.elem.animate([{ transform: "rotate(0deg)" }, { transform: "rotate(360deg)" }], {
+      duration: this.speedRate,
+      iterations: Infinity,
+      easing: "linear",
+    });
+  }
+
+  #stopAnimation() {
+    if (!this.#animation) return;
+
+    this.#animation.cancel();
+    this.#animation = null;
+  }
+
+  #removeElement() {
+    if (!this.elem) return;
+
+    this.elem.remove();
   }
 }

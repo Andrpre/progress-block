@@ -8,15 +8,25 @@
   </head>
   <body>
     <main class="main">
-      <div class="progress">
-        <div class="spinner"></div>
+      <section class="wrapper">
+        <div class="progress"></div>
         <div class="controls">
-          <label class="controls__value">
-            <input type="number" min="0" max="100" class="controls__value-input">
-            Value
+          <label class="controls__number">
+            <input type="number" min="0" max="100" value="60" id="input-value" class="controls__number-input" />
+            <span class="controls__number-title">Value</span>
+          </label>
+          <label class="controls__checkbox">
+            <input type="checkbox" id="checkbox-animate" class="controls__checkbox-input" />
+            <span class="controls__checkbox-custom-input" aria-hidden="true"></span>
+            <span class="controls__checkbox-title">Animate</span>
+          </label>
+          <label class="controls__checkbox">
+            <input type="checkbox" id="checkbox-hide" class="controls__checkbox-input" />
+            <span class="controls__checkbox-custom-input"></span>
+            <span class="controls__checkbox-title">Hide</span>
           </label>
         </div>
-      </div>
+      </section>
     </main>
 
     <script type="module" src="/src/main.js"></script>
