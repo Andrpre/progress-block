@@ -1,14 +1,3 @@
-// Пример возможных настроек для ProgressBlock (нужно передать объект в конструктор при инстанцировании):
-// const configSpinner = {
-//   className: "loader",
-//   color: {
-//     spinner: "#A126C0",
-//     spinnerBg: "#EFADFF",
-//   },
-//   strokeSize: 15,
-//   speedRate: 500,
-// };
-
 import "./style.scss";
 import ProgressBlock from "./ProgressBlock/ProgressBlock.js";
 
