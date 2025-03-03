@@ -1,6 +1,12 @@
+const STATE = {
+  ANIMATED: "animated",
+  NORMAL: "normal",
+  HIDDEN: "hidden",
+};
+
 export default class ProgressBlock {
   #progress = 60;
-  #state = "normal";
+  #state = STATE.NORMAL;
   #elem;
   #animation;
   #className;
@@ -8,14 +14,14 @@ export default class ProgressBlock {
   #strokeSize;
   #speedRate;
 
-  constructor(config = {}) {
-    this.#className = config.className || "progress-block";
-    this.#color = config.color || {
-      spinner: "#005DFF",
-      spinnerBg: "#EEF3F6",
+  constructor({ className = "progress-block", color = {}, strokeSize = 8, speedRate = 1000 } = {}) {
+    this.#className = className;
+    this.#color = {
+      spinner: color.spinner || "#005DFF",
+      spinnerBg: color.spinnerBg || "#EEF3F6",
     };
-    this.#strokeSize = config.strokeSize ?? 8;
-    this.#speedRate = config.speedRate ?? 1000;
+    this.#strokeSize = strokeSize;
+    this.#speedRate = speedRate;
 
     this.#render();
     this.progress = this.#progress;
@@ -28,20 +34,20 @@ export default class ProgressBlock {
   }
 
   set state(value) {
-    if (!["animated", "normal", "hidden"].includes(value)) {
+    if (!Object.values(STATE).includes(value)) {
       throw new Error(`Invalid state: ${value}`);
     }
 
     this.#state = value;
 
     switch (value) {
-      case "animated":
+      case STATE.ANIMATED:
         this.#startAnimation();
         break;
-      case "normal":
+      case STATE.NORMAL:
         this.#stopAnimation();
         break;
-      case "hidden":
+      case STATE.HIDDEN:
         this.#removeElement();
         break;
     }
@@ -79,6 +85,11 @@ export default class ProgressBlock {
       `;
 
     this.#elem = wrapper.firstElementChild;
+    this.#applyStyles();
+  }
+
+  #applyStyles() {
+    if (!this.#elem) return;
 
     const bgProgress = this.#elem.querySelector(`.${this.#className}-spinner-bg`);
     const progress = this.#elem.querySelector(`.${this.#className}-spinner`);

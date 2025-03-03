@@ -26,6 +26,8 @@ $border-radius-input: 35px;
 }
 
 @mixin remove-control {
+  -moz-appearance: textfield;
+
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;

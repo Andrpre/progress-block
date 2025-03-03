@@ -12,15 +12,15 @@ const initProgressBlockControls = () => {
 
   progressElem.append(spinner.elem);
 
-  valueElem.addEventListener("input", () => {
-    spinner.progress = valueElem.value;
+  valueElem.addEventListener("input", (e) => {
+    spinner.progress = Number(e.target.value) || 0;
   });
-  animateElem.addEventListener("change", () => {
-    spinner.state = animateElem.checked ? "animated" : "normal";
+  animateElem.addEventListener("change", (e) => {
+    spinner.state = e.target.checked ? "animated" : "normal";
   });
   hideElem.addEventListener("change", (e) =>
     e.target.checked ? (spinner.state = "hidden") : progressElem.append(spinner.elem)
   );
 };
 
-document.addEventListener("DOMContentLoaded", initProgressBlockControls);
+initProgressBlockControls();
