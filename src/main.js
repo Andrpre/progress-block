@@ -13,7 +13,13 @@ const initProgressBlockControls = () => {
   progressElem.append(spinner.elem);
 
   valueElem.addEventListener("input", (e) => {
-    spinner.progress = Number(e.target.value) || 0;
+    const inputValue = e.target.value.trim();
+    let value = parseInt(inputValue, 10) || 0;
+
+    value = Math.max(0, Math.min(100, value));
+
+    e.target.value = value;
+    spinner.progress = value;
   });
   animateElem.addEventListener("change", (e) => {
     spinner.state = e.target.checked ? "animated" : "normal";
